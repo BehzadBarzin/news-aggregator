@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/home/Hero";
+import Stats from "./components/home/Stats";
 import styles from "./constants/styles";
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
       </div>      
       <div className={`bg-primary ${styles.paddingX} ${styles.flexStart}`}>
         <div className={`${styles.boxWidth}`}>
-          Item
+          <Stats />
           Item
           Item
           Item
