@@ -13,4 +13,9 @@ class Source extends Model
     {
         return $this->hasMany(SourceCategory::class);
     }
+
+    public function articles()
+    {
+        return $this->hasManyThrough(Article::class, SourceCategory::class, 'source_id', 'source_category_id');
+    }
 }
