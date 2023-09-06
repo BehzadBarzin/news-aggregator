@@ -7,12 +7,12 @@ const navLinks = [
     {
         id: "home",
         title: "Home",
-        link: "#"
+        link: "#home"
     },
     {
         id: "features",
         title: "Features",
-        link: "#"
+        link: "#features"
     }
 ];
 
@@ -34,7 +34,7 @@ function Navbar() {
                         active === nav.id ? "text-white" : "text-dimWhite"
                     } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
                     onClick={() => setActive(nav.id)}>
-                    <a href={`#${nav.link}`}>{nav.title}</a>
+                    <a href={`${nav.link}`}>{nav.title}</a>
                     </li>
                 ))
                 }
@@ -64,7 +64,7 @@ function Navbar() {
                 } ${index === navLinks.length - 1 ? "mb-0" : "mb-4"}`}
                 onClick={() => setActive(nav.title)}
               >
-                <a href={`#${nav.link}`}>{nav.title}</a>
+                <a href={`${nav.link}`}>{nav.title}</a>
               </li>
             ))}
           </ul>
