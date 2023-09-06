@@ -22,7 +22,7 @@ function Navbar() {
     
     return (
         <nav className="w-full flex py-6 justify-between items-center navbar">
-            <img src={logo} alt="news-aggregator-logo" className="w-[124px] h-[32px]" />
+            <img src={logo} alt="news-aggregator-logo" className="w-[154px] h-[52px]" />
             
             {/* Desktop Menu */}
             <ul className="list-none sm:flex hidden justify-end items-center flex-1">

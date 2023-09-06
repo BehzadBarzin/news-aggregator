@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import Hero from "./components/home/Hero";
 import styles from "./constants/styles";
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
       </div>
       <div className={`bg-primary ${styles.flexStart}`}>
         <div className={`${styles.boxWidth}`}>
-          Hero
+          <Hero />
         </div>
       </div>      
       <div className={`bg-primary ${styles.paddingX} ${styles.flexStart}`}>
