@@ -43,6 +43,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    protected $with = ['preferences'];
+
     public function preferences()
     {
         return $this->hasOne(UserPreferences::class, 'user_id');

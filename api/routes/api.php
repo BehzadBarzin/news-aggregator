@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SourceController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,9 @@ Route::get('/authors', [AuthorController::class, 'index']);
 Route::get('/sources', [SourceController::class, 'index']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
+
+Route::post('/register', [UserController::class, 'register']);
+
+Route::post('/login', [UserController::class, 'login']);
+
+Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
