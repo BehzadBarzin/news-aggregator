@@ -49,6 +49,7 @@ class NYTimesAggregator extends Aggregator {
     }
 
     private static function save_article($item, $source_category) {
+        if ($item['title'] == '') return;
 
         $by_line = $item['byline'];
         $by_line = str_replace('By ', '', $by_line);
