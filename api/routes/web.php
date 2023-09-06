@@ -1,6 +1,5 @@
 <?php
 
-use App\Jobs\AggregateNewsAPI;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/articles', function () {
     return view('welcome');
 });

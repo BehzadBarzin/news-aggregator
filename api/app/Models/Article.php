@@ -9,6 +9,12 @@ class Article extends Model
 {
     use HasFactory;
 
+    protected $with = ['sourceCategory', 'authors'];
+
+    protected $hidden = [
+        'created_at', 'updated_at', 'source_category_id'
+    ];
+
     /**
      * The attributes that are mass assignable.
      *

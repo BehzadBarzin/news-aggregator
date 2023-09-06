@@ -9,6 +9,12 @@ class SourceCategory extends Model
 {
     use HasFactory;
 
+    protected $with = ['source', 'category'];
+
+    protected $hidden = [
+        'id', 'name', 'source_id', 'category_id'
+    ];
+
     public function articles() {
         return $this->hasMany(Article::class);
     }
