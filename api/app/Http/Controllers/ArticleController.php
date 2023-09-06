@@ -44,6 +44,6 @@ class ArticleController extends Controller
             }
         }
 
-        return $query->get();
+        return $query->paginate(20);
     }
 }
