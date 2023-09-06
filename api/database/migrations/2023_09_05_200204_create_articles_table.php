@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->text('title');
-            $table->text('abstract');
-            $table->string('url');
+            $table->text('url');
             $table->timestamp('published_at');
 
             $table->unsignedBigInteger('source_category_id');

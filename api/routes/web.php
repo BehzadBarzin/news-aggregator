@@ -1,5 +1,8 @@
 <?php
 
+use App\Aggregators\GuardianAggregator;
+use App\Aggregators\NewsAPIAggregator;
+use App\Aggregators\NYTimesAggregator;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    NewsAPIAggregator::run();
+    // return view('welcome');
 });

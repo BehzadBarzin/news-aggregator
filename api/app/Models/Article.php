@@ -14,7 +14,7 @@ class Article extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'abstract', 'url', 'published_at'];
+    protected $fillable = ['title', 'url', 'published_at'];
 
     public function authors()
     {
