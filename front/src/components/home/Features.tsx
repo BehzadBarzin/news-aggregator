@@ -53,7 +53,7 @@ const FeatureCard: FC<TFeatureCardProps> = ({ icon, title, content, index }) => 
       </div>
       <div className="flex-1 flex flex-col ml-3">
         <h4 className="font-poppins font-semibold text-white text-[18px] leading-[23px] mb-1">
-          {title}
+          <span className="text-gradient">{title}</span>
         </h4>
         <p className="font-poppins font-normal text-dimWhite text-[16px] leading-[24px]">
           {content}
@@ -68,10 +68,10 @@ function Features() {
         <div className={layout.sectionInfo}>
         <h2 className={styles.heading2}>
             Create your custom feed, <br className="sm:block hidden" /> we’ll handle
-            the data.
+            the rest.
         </h2>
         <p className={`${styles.paragraph} max-w-[470px] mt-5`}>
-            With access to over 300+ news sources, we can gather the data at blazing speed and let you infinitely customize your feed however you want. Just come here, and we'll handle the rest!
+            With access to over <span className="text-gradient">300+ news sources</span>, we can gather the data at blazing speed and let you infinitely customize your feed however you want. Just come here, and we'll handle the rest!
         </p>
 
             <Button styles={`mt-10`} text='Go to feed'/>
