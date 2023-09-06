@@ -19,10 +19,10 @@ return new class extends Migration
                 ->on('users')
                 ->onDelete('cascade');
 
-            $table->json('authors')->nullable();
-            $table->json('sources')->nullable();
-            $table->json('categories')->nullable();
-            $table->json('keywords')->nullable();
+            $table->text('authors')->nullable();
+            $table->text('sources')->nullable();
+            $table->text('categories')->nullable();
+            $table->text('keywords')->nullable();
 
             $table->timestamps();
         });

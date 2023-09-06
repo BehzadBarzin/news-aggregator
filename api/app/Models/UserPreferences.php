@@ -9,6 +9,10 @@ class UserPreferences extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id', 'authors', 'sources', 'categories', 'keywords'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

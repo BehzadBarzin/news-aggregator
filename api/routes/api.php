@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPreferencesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,3 +37,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
+
+Route::middleware('auth:sanctum')->get('/preferences', [UserPreferencesController::class, 'show']);
+
+Route::middleware('auth:sanctum')->post('/preferences', [UserPreferencesController::class, 'store']);
