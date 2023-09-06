@@ -15,9 +15,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(new AggregateNewsAPI)->everyMinute();
-        $schedule->job(new AggregateGuardian)->everyMinute();
-        $schedule->job(new AggregateNYTimes)->everyMinute();
+        $schedule->job(new AggregateNewsAPI)->hourly();
+        $schedule->job(new AggregateGuardian)->hourly();
+        $schedule->job(new AggregateNYTimes)->hourly();
     }
 
     /**
