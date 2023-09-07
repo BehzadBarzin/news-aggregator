@@ -14,6 +14,7 @@ type ArticleProps = {
     article: TArticle,
 }
 
+// An article card on the Feed page
 const Article: FC<ArticleProps> = ({ article }) => {
   return (
     <div className="p-4">
@@ -22,13 +23,18 @@ const Article: FC<ArticleProps> = ({ article }) => {
             <p className="font-poppins font-normal xs:text-[16px] text-[12px] xs:leading-[21px] leading-[21px] text-gradient mb-6">
                 <span className="font-bold">Authors:</span> {' '}
                 {
+                    // Authors names
                     article.authors.map((auth: string, idx: number) => {
+                        // If just one author
                         if (article.authors.length === 1) {
                             return `${auth}`;
                         }
+                        // If multiple authors
                         if (idx < article.authors.length) {
+                            // Every author (not last)
                             return `${auth}, `;
                         } else {
+                            // Last author
                             return `and ${auth}`;
                         }
                     })

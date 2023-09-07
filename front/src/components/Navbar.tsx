@@ -6,9 +6,13 @@ import styles from '../constants/styles';
 import {NavLink, useLocation, useNavigate} from 'react-router-dom';
 import {useIsAuthenticated, useSignOut} from 'react-auth-kit';
 
+// --------------------------------------------------------------------------------------------------
+
 const MyNavLink = ({ to, title }: {to: string, title: string}) => (
   <NavLink to={to} style={({isActive}) => isActive ? { color: 'white' } : { color: 'DarkGrey' }}>{title}</NavLink>
 );
+
+// --------------------------------------------------------------------------------------------------
 
 type NavItemProps = {
   key: string,
@@ -16,6 +20,7 @@ type NavItemProps = {
   isLast: boolean,
   children: string | JSX.Element | JSX.Element[]
 }
+
 const NavItem: FC<NavItemProps> = ({ key, isMobile, isLast, children }) => {
   if (!isMobile) {
     return (
@@ -36,8 +41,9 @@ const NavItem: FC<NavItemProps> = ({ key, isMobile, isLast, children }) => {
   }
 }
 
+// --------------------------------------------------------------------------------------------------
 function Navbar() {
-    const [toggle, setToggle] = useState(false);
+    const [toggle, setToggle] = useState(false); // Toggle the menu popup on the mobile view
     const isAuthenticated = useIsAuthenticated();
     const signOut = useSignOut();
     const navigate = useNavigate();
@@ -56,6 +62,7 @@ function Navbar() {
                     <MyNavLink to={'/'} title='Home' />
                   </NavItem>
                   {
+                    // Only display this item on the home page
                     location.pathname === '/' 
                     ?
                     <NavItem key='features' isMobile={false} isLast={false}>
@@ -70,6 +77,7 @@ function Navbar() {
                     isAuthenticated() 
                     ?
                     (
+                      // If user is authenticated > show Logout
                       <NavItem key='logout' isMobile={false} isLast={true}>
                         <a href="" onClick={() => {
                           signOut();
@@ -79,6 +87,7 @@ function Navbar() {
                       ) 
                       :
                       (
+                      // If not authenticate > show Login
                       <NavItem key='login' isMobile={false} isLast={true}>
                         <MyNavLink to={'/login'} title='LogIn' />
                       </NavItem>
@@ -103,10 +112,12 @@ function Navbar() {
           >
             <ul className="list-none flex justify-end items-start flex-1 flex-col">
               {/* Mobile Nav Items */}
+              {/* TODO: Should not repeat menu items for the mobile view */}
               <NavItem key='home' isMobile={true} isLast={false}>
                     <MyNavLink to={'/'} title='Home' />
               </NavItem>
               {
+                // Only display this item on the home page
                 location.pathname === '/' 
                 ?
                 <NavItem key='features' isMobile={true} isLast={false}>
@@ -121,6 +132,7 @@ function Navbar() {
                     isAuthenticated() 
                     ?
                     (
+                      // If user is authenticated > show Logout
                       <NavItem key='logout' isMobile={true} isLast={true}>
                         <a href="" onClick={() => {
                           signOut();
@@ -130,6 +142,7 @@ function Navbar() {
                       ) 
                       :
                       (
+                      // If not authenticate > show Login
                       <NavItem key='login' isMobile={true} isLast={true}>
                         <MyNavLink to={'/login'} title='LogIn' />
                       </NavItem>

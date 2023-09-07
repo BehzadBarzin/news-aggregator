@@ -63,6 +63,8 @@ const FeatureCard: FC<TFeatureCardProps> = ({ icon, title, content, index }) => 
     </div>
 );
 
+// -------------------------------------------------------------------------------------------------
+
 function Features() {
   const navigate = useNavigate();
 
@@ -88,5 +90,7 @@ function Features() {
     </section>
   )
 }
+
+// -------------------------------------------------------------------------------------------------
 
 export default Features

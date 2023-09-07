@@ -1,3 +1,4 @@
+// A few objects that have properties representing a list of Tailwind classes to utilize in views
 const styles = {
     boxWidth: "xl:max-w-[1280px] w-full",
   

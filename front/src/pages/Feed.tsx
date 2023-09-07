@@ -5,10 +5,16 @@ import Article, { TArticle } from "../components/feed/Article";
 import { useIsAuthenticated, useAuthHeader } from "react-auth-kit";
 import styles from "../constants/styles";
 
+// ----------------------------------------------------------------------------------------------
+// Utility Function
+
 function getEnumKeyByEnumValue(myEnum, enumValue) {
     const keys = Object.keys(myEnum).filter(x => myEnum[x] == enumValue);
     return keys.length > 0 ? keys[0] : null;
 }
+
+// ----------------------------------------------------------------------------------------------
+// Utility Enums used to create a list of filters
 
 enum Sources {
     GUARDIAN = '1',
@@ -25,7 +31,9 @@ enum Categories {
     Entertainment = '6',
     General = '7',
 }
+// ----------------------------------------------------------------------------------------------
 
+// State type
 type FiltersType = {
     page: number,
     authors?: string[],
@@ -34,21 +42,31 @@ type FiltersType = {
     keywords?: string[]
 }
 
+// State type
 type AuthorType = {
     id: number,
     name: string
 }
+//-------------------------------------------------------------------------------------------------------------
 
 function Feed() {
+    // --------------------------------------------------------------
+    // State to keep track of active filters
     const [filters, setFilters] = useState<FiltersType>({
         page: 1,
     });
-
+    // --------------------------------------------------------------
+    // State to hold a list of all articles (coming from backend)
     const [articles, setArticles] = useState<TArticle[]>([]);
-    
+    // --------------------------------------------------------------
+    // State to keep track of the total number of pages
     const [lastPage, setLastPage] = useState<number>(1);
+    // --------------------------------------------------------------
 
+    // A method to get a list of all articles based on active filters from api
     const getData = useCallback(async () => {
+
+        // Make http call to api
         const res = await axios.get(`${API_URL}/articles`, {
             params: {
                 page: filters.page,
@@ -59,8 +77,10 @@ function Feed() {
             }
         });
         
+        // What is the total number of pages?
         setLastPage(res.data.last_page);
 
+        // Save retrieved articles in the state
         setArticles(() => {
             return res.data.data.map((a: any) => ({
                 id: a.id,
@@ -73,14 +93,20 @@ function Feed() {
             }));
         });
     }, [filters]);
-    
+
+
+    // On the first render, and every time the filters change, re-fetch the articles
     useEffect(() => {
         getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters]);
 
+    // --------------------------------------------------------------
+
+    // Every time a Source checkbox is checked/unchecked
     const onSourceChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
+            // Change active filters
             setFilters((prev) => {
                 return {
                     ...prev,
@@ -88,6 +114,7 @@ function Feed() {
                 }
             });
         } else {
+            // Change active filters
             setFilters((prev) => ({
                 ...prev,
                 sources: prev.sources?.filter((s) => s != e.target.name)
@@ -96,12 +123,17 @@ function Feed() {
     
     }
 
+    // Used to determine if a specific source is in filters, make its checkbox checked
     const isSourceChecked = (source: Sources): boolean => {
         return filters.sources?.includes(source) || false;
     }
 
+    // --------------------------------------------------------------
+
+    // Every time a Category checkbox is checked/unchecked
     const onCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
+            // Change active filters
             setFilters((prev) => {
                 return {
                     ...prev,
@@ -109,6 +141,7 @@ function Feed() {
                 }
             });
         } else {
+            // Change active filters
             setFilters((prev) => ({
                 ...prev,
                 categories: prev.categories?.filter((s) => s != e.target.name)
@@ -117,11 +150,16 @@ function Feed() {
     
     }
 
+    // Used to determine if a specific Category is in filters, make its checkbox checked
     const isCategoryChecked = (c: Categories): boolean => {
         return filters.categories?.includes(c) || false;
     }
 
+    // --------------------------------------------------------------
+    // State to keep a list of all Authors on the backend
     const [authors, setAuthors] = useState<AuthorType[]>([]);
+
+    // On the first render, fetch the list of all Authors
     useEffect(() => {
         const getAuthors = async () => {
             const res = await axios.get(`${API_URL}/authors`);
@@ -130,9 +168,12 @@ function Feed() {
 
         getAuthors();
     }, []);
+    // --------------------------------------------------------------
 
+    // Every time an Author checkbox is checked/unchecked
     const onAuthorChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
+            // Change active filters
             setFilters((prev) => {
                 return {
                     ...prev,
@@ -140,6 +181,7 @@ function Feed() {
                 }
             });
         } else {
+            // Change active filters
             setFilters((prev) => ({
                 ...prev,
                 authors: prev.authors?.filter((s) => s != e.target.name)
@@ -148,18 +190,24 @@ function Feed() {
     
     }
 
+    // Used to determine if a specific Author is in filters, make its checkbox checked
     const isAuthorChecked = (id: number): boolean => {
         return filters.authors?.includes(`${id}`) || false;
     }
 
+    // --------------------------------------------------------------
 
+    // State to keep track of the current value in the keyword input (controlled input)
     const [keywordInputValue, setKeywordInputValue] = useState<string>('');
 
+    // When the value of the keyword input changes, update the state that keeps its current value (controlled input)
     const onKeywordInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setKeywordInputValue(e.target.value);
     }
 
+    // Add keyword to the list of filters
     const addKeyword = (kw: string) => {
+        // Update filters
         setFilters((prev) => {
             return {
                 ...prev,
@@ -168,7 +216,9 @@ function Feed() {
         });
     }
 
+    // Remove a keyword from filters
     const removeKeyword = (kw: string) => {
+        // Update filters
         setFilters((prev) => {
             return {
                 ...prev,
@@ -177,15 +227,23 @@ function Feed() {
         });
     }
 
+    // --------------------------------------------------------------
+
+    // Checks to see if the user is authenticated or not (does it have a token in cookies)
     const isAuthenticated = useIsAuthenticated();
+
+    // Provides 'Bearer xxxx' header value based on the token saved in cookies by 'react-auth-kit' library
     const authHeader = useAuthHeader()
 
     // On the first render get the user's preferences from server and set them to filters state
+    // This way user's filters will persist throughout logins
     useEffect(() => {
+        // If not logged in, skip
         if (!isAuthenticated()) return;
+
         const getPrefs = async () => {
             const res = await axios.get(`${API_URL}/preferences`, {
-                headers: { Authorization: authHeader() }
+                headers: { Authorization: authHeader() } // Get auth token string from 'react-auth-kit'
             });
 
             setFilters((prev) => {
@@ -202,10 +260,12 @@ function Feed() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Every time the filters state changes, save the changes to the user's preferences
+    // Every time the filters state changes, save the changes to the user's preferences on the backend
+    // This way user's filters will persist throughout logins
     useEffect(() => {
+        // If not logged in, skip
         if (!isAuthenticated()) return;
-        console.log(filters.categories);
+
         const sendPrefs = async () => {
             const res = await axios.post(`${API_URL}/preferences`, {
                 authors: filters.authors,
@@ -216,7 +276,7 @@ function Feed() {
                 headers: {
                   'Accept': 'application/json',
                   'Content-Type': 'application/json',
-                  Authorization: authHeader()
+                  Authorization: authHeader() // Get auth token string from 'react-auth-kit'
                 }
               });
         };
@@ -224,19 +284,21 @@ function Feed() {
         sendPrefs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters]);
+    // --------------------------------------------------------------
 
-return (
-<div className={`min-h-screen`}>
-<button data-drawer-target="separator-sidebar" data-drawer-toggle="separator-sidebar" aria-controls="separator-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-   <span className="sr-only">Open sidebar</span>
-   <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-   </svg>
-</button>
-{/* Sidebar */}
-<aside id="separator-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-    <div className="font-poppins h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-        {/* Source */}
+    return (
+    <div className={`min-h-screen`}>
+    {/* Sidebar Toggle (on mobile) -------------------------------------------------------------------  */}
+    <button data-drawer-target="separator-sidebar" data-drawer-toggle="separator-sidebar" aria-controls="separator-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+        <span className="sr-only">Open sidebar</span>
+        <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+        </svg>
+    </button>
+    {/* Sidebar----------------------------------------------------------------------------------------- */}
+    <aside id="separator-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+        <div className="font-poppins h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        {/* Sources----------------------------------------- */}
         <ul className="space-y-2 font-medium">
             <li className="flex flex-col items-start p-2 text-white group">
                 <h4 className="mb-5">
@@ -256,7 +318,7 @@ return (
                 </div>
             </li>
         </ul>
-        {/* Categories */}
+        {/* Categories--------------------------------------- */}
         <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700">
             <li className="flex flex-col items-start p-2 text-white group">
                     <h4 className="mb-5">
@@ -274,7 +336,7 @@ return (
                     }
                 </li>
         </ul>
-        {/* Keywords */}
+        {/* Keywords--------------------------------------- */}
         <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700">
         <li className="flex flex-col items-start p-2 text-white group">
         <h4 className="mb-5">
@@ -314,7 +376,7 @@ return (
         </div>
         </li>
         </ul>
-        {/* Authors */}
+        {/* Authors---------------------------------------*/}
         <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700">
             <li className="flex flex-col items-start p-2 text-white group">
                     <h4 className="mb-5">
@@ -337,26 +399,31 @@ return (
     </div>
 </aside>
 
+    {/* Main Body---------------------------------------------------------------------------------------------- */}
     <div className="p-4 sm:ml-64">
-        {/* Pagination buttons */}
+        {/* Pagination buttons------------------------------------ */}
         <div className="flex flex-row justify-center items-center mb-3 ">
+            {/* Previous page------------------------------------ */}
             <button type="button" className="border-2 border-gray-700 border-dashed text-xl inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                 disabled={filters.page == 1}
                 onClick={() => (setFilters(prev => ({...prev, page: prev.page - 1})))}>
                 {'Previous'}
             </button>
+            {/* Current  page / Total pages---------------------- */}
             <h3 className="font-poppins text-2xl font-bold text-gradient ml-4 mr-4 ">
                 Page {filters.page} / {lastPage}
             </h3>
+            {/* Next Page---------------------------------------- */}
             <button type="button" className="border-2 border-gray-700 border-dashed text-xl inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                 disabled={filters.page >= lastPage}
                 onClick={() => (setFilters(prev => ({...prev, page: prev.page + 1})))}>
                 {'Next'}
             </button>
         </div>
+        {/* Grid of Articles------------------------------------------------------------ */}
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
             <div className="grid grid-cols-3 gap-4 mb-4">
-                {/* Each article */}
+                {/* Articles----------------------------- */}
                 {
                     articles.map((a: TArticle) => {
                         return (
@@ -369,6 +436,7 @@ return (
                     })
                 }
             </div>
+                {/* If no article-------------------------- */}
                 {
                     articles.length === 0 ?
                     <div className={`${styles.flexCenter}`}> 

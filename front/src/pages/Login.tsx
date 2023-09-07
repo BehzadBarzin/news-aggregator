@@ -6,6 +6,7 @@ import { API_URL } from "../constants/Constants";
 import { useSignIn } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 
+// State to keep track of form input values (make them controlled inputs)
 type FormState = {
   name?: string,
   email?: string,
@@ -15,11 +16,19 @@ type FormState = {
 
 
 function Login() {
+  // This toggles the form between Register and Login modes
   const [isRegister, setIsRegister] = useState<boolean>(false);
+  
+  // State that holds the current  value of all form fields
   const [formState, setFormState] = useState<FormState>({});
+  
+  // Used to sign in the user with the 'react-auth-kit' library which simply stores the access token in cookies
   const signIn = useSignIn();
+
+  // Used to navigate around routes with React Router
   const navigate = useNavigate();
 
+  // Called when the 'Register' toggle is switched and sets the 'isRegister' state
   const changeRegister = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setIsRegister(true);
@@ -28,17 +37,21 @@ function Login() {
     }
   }
 
+  // Single callback to handle all onChange events on every form input and keep the formState in sync
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormState((prev) => {
       return {
         ...prev,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value, // dynamic way to add property with dynamic name (ensure that input's 'name' attribute matches their corresponding state property)
       }
     });
   }
 
+  // A callback to submit the form data to api
   const submit = useCallback(async () => {
+    // If in login mode
     if (!isRegister) {
+      // make http request to backend to login
       const res = await axios.post(`${API_URL}/login`, {
         email: formState.email,
         password: formState.password
@@ -49,6 +62,7 @@ function Login() {
         }
       });
 
+      // Sign in the user with the 'react-auth-kit' package
       signIn({
         token: res.data.token,
         tokenType: 'Bearer',
@@ -56,9 +70,13 @@ function Login() {
         authState: res.data.user
       });
 
+      // Go to home page
       navigate('/');
       
     } else {
+      // If in register mode
+      
+      // make http request to backend to register the new user
       const res = await axios.post(`${API_URL}/register`, {
         name: formState.name,
         email: formState.email,
@@ -71,6 +89,7 @@ function Login() {
         }
       });
 
+      // Sign in the user with the 'react-auth-kit' package
       signIn({
         token: res.data.token,
         tokenType: 'Bearer',
@@ -78,11 +97,13 @@ function Login() {
         authState: res.data.user
       });
 
+      // Go to home page
       navigate('/');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRegister, formState]);
   
+  // handles onSubmit of the form
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     submit();
