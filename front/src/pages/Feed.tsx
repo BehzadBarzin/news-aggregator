@@ -32,6 +32,11 @@ type FiltersType = {
     keywords?: string[]
 }
 
+type AuthorType = {
+    id: number,
+    name: string
+}
+
 function Feed() {
     const [filters, setFilters] = useState<FiltersType>({
         page: 1,
@@ -90,7 +95,7 @@ function Feed() {
     }
 
     const isSourceChecked = (source: Sources): boolean => {
-        return filters.sources?.includes(source);
+        return filters.sources?.includes(source) || false;
     }
 
     const onCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -111,8 +116,40 @@ function Feed() {
     }
 
     const isCategoryChecked = (c: Categories): boolean => {
-        return filters.categories?.includes(c);
+        return filters.categories?.includes(c) || false;
     }
+
+    const [authors, setAuthors] = useState<AuthorType[]>([]);
+    useEffect(() => {
+        const getAuthors = async () => {
+            const res = await axios.get(`${API_URL}/authors`);
+            setAuthors(res.data);
+        }
+
+        getAuthors();
+    }, []);
+
+    const onAuthorChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.checked) {
+            setFilters((prev) => {
+                return {
+                    ...prev,
+                    authors: prev.authors ? [...prev.authors, e.target.name] : [e.target.name]
+                }
+            });
+        } else {
+            setFilters((prev) => ({
+                ...prev,
+                authors: prev.authors?.filter((s) => s != e.target.name)
+            }));
+        }
+    
+    }
+
+    const isAuthorChecked = (id: number): boolean => {
+        return filters.authors?.includes(`${id}`) || false;
+    }
+
 
 return (
 <div className={`min-h-screen`}>
@@ -125,9 +162,9 @@ return (
 {/* Sidebar */}
 <aside id="separator-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
     <div className="font-poppins h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        {/* Source */}
         <ul className="space-y-2 font-medium">
             <li className="flex flex-col items-start p-2 text-white group">
-                {/* Source */}
                 <h4 className="mb-5">
                     Sources: 
                 </h4>
@@ -145,10 +182,9 @@ return (
                 </div>
             </li>
         </ul>
-        {/* With top line */}
+        {/* Categories */}
         <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700">
             <li className="flex flex-col items-start p-2 text-white group">
-                    {/* Categories */}
                     <h4 className="mb-5">
                         Categories: 
                     </h4>
@@ -162,6 +198,26 @@ return (
                             )
                         })
                     }
+                </li>
+        </ul>
+        {/* Authors */}
+        <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700">
+            <li className="flex flex-col items-start p-2 text-white group">
+                    <h4 className="mb-5">
+                        Authors: 
+                    </h4>
+                    <div className="overflow-scroll h-[300px]">
+                    {
+                        authors.map((a: AuthorType) => {
+                            return (
+                                <div className="flex items-center mb-2">
+                                    <input checked={isAuthorChecked(a.id)} onChange={onAuthorChange} name={`${a.id}`} id={`${a.id}`} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                    <label htmlFor={`${a.id}`} className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{a.name}</label>
+                                </div>
+                            )
+                        })
+                    }
+                    </div>
                 </li>
         </ul>
     </div>
