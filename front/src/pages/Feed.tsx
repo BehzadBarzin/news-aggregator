@@ -339,17 +339,20 @@ return (
 
     <div className="p-4 sm:ml-64">
         {/* Pagination buttons */}
-        <div className="flex flex-row justify-center mb-3 ">
-        <button type="button" className="border-2 border-gray-700 border-dashed text-xl inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-            disabled={filters.page == 1}
-            onClick={() => (setFilters(prev => ({...prev, page: prev.page - 1})))}>
-            {'Previous'}
-        </button>
-        <button type="button" className="border-2 border-gray-700 border-dashed text-xl inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-            disabled={filters.page >= lastPage}
-            onClick={() => (setFilters(prev => ({...prev, page: prev.page + 1})))}>
-            {'Next'}
-        </button>
+        <div className="flex flex-row justify-center items-center mb-3 ">
+            <button type="button" className="border-2 border-gray-700 border-dashed text-xl inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                disabled={filters.page == 1}
+                onClick={() => (setFilters(prev => ({...prev, page: prev.page - 1})))}>
+                {'Previous'}
+            </button>
+            <h3 className="font-poppins text-2xl font-bold text-gradient ml-4 mr-4 ">
+                Page {filters.page} / {lastPage}
+            </h3>
+            <button type="button" className="border-2 border-gray-700 border-dashed text-xl inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                disabled={filters.page >= lastPage}
+                onClick={() => (setFilters(prev => ({...prev, page: prev.page + 1})))}>
+                {'Next'}
+            </button>
         </div>
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
             <div className="grid grid-cols-3 gap-4 mb-4">
