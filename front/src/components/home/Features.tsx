@@ -7,6 +7,7 @@ import source from '../../assets/source.svg';
 import category from '../../assets/category.svg';
 import keyword from '../../assets/keyword.svg';
 import Button from '../Button';
+import { useNavigate } from 'react-router-dom';
 
 const features = [
   {
@@ -63,6 +64,8 @@ const FeatureCard: FC<TFeatureCardProps> = ({ icon, title, content, index }) => 
 );
 
 function Features() {
+  const navigate = useNavigate();
+
   return (
     <section id="features" className={layout.section}>
         <div className={layout.sectionInfo}>
@@ -74,7 +77,7 @@ function Features() {
             With access to over <span className="text-gradient">300+ news sources</span>, we can gather the data at blazing speed and let you infinitely customize your feed however you want. Just come here, and we'll handle the rest!
         </p>
 
-            <Button styles={`mt-10`} text='Go to feed'/>
+            <Button onClick={() => { navigate('/feed'); }} styles={`mt-10`} text='Go to feed'/>
         </div>
 
         <div className={`${layout.sectionImg} flex-col`}>
