@@ -2,6 +2,7 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react"
 import { API_URL } from "../constants/Constants";
 import axios from "axios";
 import Article, { TArticle } from "../components/feed/Article";
+import { useIsAuthenticated, useAuthHeader } from "react-auth-kit";
 
 function getEnumKeyByEnumValue(myEnum, enumValue) {
     const keys = Object.keys(myEnum).filter(x => myEnum[x] == enumValue);
@@ -150,6 +151,54 @@ function Feed() {
         return filters.authors?.includes(`${id}`) || false;
     }
 
+    const isAuthenticated = useIsAuthenticated();
+    const authHeader = useAuthHeader()
+
+    // On the first render get the user's preferences from server and set them to filters state
+    useEffect(() => {
+        if (!isAuthenticated()) return;
+        const getPrefs = async () => {
+            const res = await axios.get(`${API_URL}/preferences`, {
+                headers: { Authorization: authHeader() }
+            });
+
+            // TODO: Data is empty
+            console.log(res.data);
+            setFilters((prev) => {
+                return {
+                    ...prev,
+                    authors: res.data.authors ? JSON.parse(res.data.authors) : [],
+                    sources: res.data.sources ? JSON.parse(res.data.sources) : [],
+                    categories: res.data.categories ? JSON.parse(res.data.categories) : [],
+                    keywords: res.data.keywords ? JSON.parse(res.data.keywords) : [],
+                }
+            })
+        }
+        getPrefs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Every time the filters state changes, save the changes to the user's preferences
+    useEffect(() => {
+        if (!isAuthenticated()) return;
+        const sendPrefs = async () => {
+            const res = await axios.post(`${API_URL}/preferences`, {
+                authors: filters.authors || [],
+                sources: filters.sources || [],
+                categories: filters.categories || [],
+                keywords: filters.keywords || []
+              }, {
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  Authorization: authHeader()
+                }
+              });
+        };
+
+        sendPrefs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filters]);
 
 return (
 <div className={`min-h-screen`}>
@@ -191,7 +240,7 @@ return (
                     {
                         Object.values(Categories).map((c) => {
                             return (
-                                <div className="flex items-center mb-2">
+                                <div key={c} className="flex items-center mb-2">
                                     <input checked={isCategoryChecked(c)} onChange={onCategoryChange} name={c} id={c} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                                     <label htmlFor={c} className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{`${getEnumKeyByEnumValue(Categories, c)}`}</label>
                                 </div>
@@ -210,7 +259,7 @@ return (
                     {
                         authors.map((a: AuthorType) => {
                             return (
-                                <div className="flex items-center mb-2">
+                                <div key={a.id} className="flex items-center mb-2">
                                     <input checked={isAuthorChecked(a.id)} onChange={onAuthorChange} name={`${a.id}`} id={`${a.id}`} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                                     <label htmlFor={`${a.id}`} className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{a.name}</label>
                                 </div>
@@ -243,10 +292,10 @@ return (
                 {
                     articles.map((a: TArticle) => {
                         return (
-                            <div className="flex items-center justify-center rounded bg-gray-50 dark:bg-gray-800">
-                                <p className="text-2xl text-gray-100 dark:text-gray-200">
+                            <div  key={a.id} className="flex items-center justify-center rounded bg-gray-50 dark:bg-gray-800">
+                                <div className="text-2xl text-gray-100 dark:text-gray-200">
                                     <Article article={a}/>
-                                </p>
+                                </div>
                             </div>
                         );
                     })

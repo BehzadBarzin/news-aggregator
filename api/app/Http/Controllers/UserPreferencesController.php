@@ -25,6 +25,6 @@ class UserPreferencesController extends Controller
 
     public function show()
     {
-        auth()->user()->preferences;
+        return auth()->user()->preferences;
     }
 }
