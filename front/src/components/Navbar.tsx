@@ -3,7 +3,7 @@ import logo from '../assets/logo.svg';
 import menu from '../assets/menu.svg';
 import close from '../assets/close.svg';
 import styles from '../constants/styles';
-import {NavLink, useNavigate} from 'react-router-dom';
+import {NavLink, useLocation, useNavigate} from 'react-router-dom';
 import {useIsAuthenticated, useSignOut} from 'react-auth-kit';
 
 const MyNavLink = ({ to, title }: {to: string, title: string}) => (
@@ -41,6 +41,7 @@ function Navbar() {
     const isAuthenticated = useIsAuthenticated();
     const signOut = useSignOut();
     const navigate = useNavigate();
+    const location = useLocation()
 
     return (
       <div className={`${styles.paddingX} ${styles.flexCenter}`}>
@@ -54,8 +55,16 @@ function Navbar() {
                   <NavItem key='home' isMobile={false} isLast={false}>
                     <MyNavLink to={'/'} title='Home' />
                   </NavItem>
-                  <NavItem key='features' isMobile={false} isLast={false}>
-                    <a href="#features" style={{ color: 'DarkGrey' }}>Features</a>
+                  {
+                    location.pathname === '/' 
+                    ?
+                    <NavItem key='features' isMobile={false} isLast={false}>
+                      <a href="#features" style={{ color: 'DarkGrey' }}>Features</a>
+                    </NavItem>
+                    : null
+                  }
+                  <NavItem key='feed' isMobile={false} isLast={false}>
+                    <MyNavLink to={'/feed'} title='Feed' />
                   </NavItem>
                   {
                     isAuthenticated() 
@@ -97,8 +106,16 @@ function Navbar() {
               <NavItem key='home' isMobile={true} isLast={false}>
                     <MyNavLink to={'/'} title='Home' />
               </NavItem>
-              <NavItem key='features' isMobile={true} isLast={false}>
-                <a href="#features" style={{ color: 'DarkGrey' }}>Features</a>
+              {
+                location.pathname === '/' 
+                ?
+                <NavItem key='features' isMobile={true} isLast={false}>
+                  <a href="#features" style={{ color: 'DarkGrey' }}>Features</a>
+                </NavItem>
+                : null
+              }
+              <NavItem key='feed' isMobile={true} isLast={false}>
+                    <MyNavLink to={'/feed'} title='Feed' />
               </NavItem>
               {
                     isAuthenticated() 

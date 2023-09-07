@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import { AuthProvider, RequireAuth } from 'react-auth-kit';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
+import Feed from './pages/Feed';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/login' element={<Login />} />
+              <Route path='/feed' element={<Feed />} />
               {/* <Route path='/my-feed' element={<RequireAuth loginPath='/login'><MyFeed /></RequireAuth>} /> */}
             </Routes>
           </BrowserRouter>
