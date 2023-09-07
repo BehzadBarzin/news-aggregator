@@ -1,31 +1,27 @@
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
-import Features from "./components/home/Features";
-import Hero from "./components/home/Hero";
-import Stats from "./components/home/Stats";
-import styles from "./constants/styles";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home'
+import { AuthProvider, RequireAuth } from 'react-auth-kit';
+import Login from './pages/Login';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <div className='bg-primary w-full overflow-hidden'>
-      <div className={`${styles.paddingX} ${styles.flexCenter}`}>
-        <div className={`${styles.boxWidth}`}>
-          <Navbar />
+    <AuthProvider
+      authType='cookie'
+      authName='_auth'
+      cookieDomain={window.location.hostname}
+      cookieSecure={false}>
+        <div className='bg-primary w-full overflow-hidden'>
+          <BrowserRouter>
+            <Navbar />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/login' element={<Login />} />
+              {/* <Route path='/my-feed' element={<RequireAuth loginPath='/login'><MyFeed /></RequireAuth>} /> */}
+            </Routes>
+          </BrowserRouter>
         </div>
-      </div>
-      <div className={`bg-primary ${styles.flexStart}`}>
-        <div className={`${styles.boxWidth}`}>
-          <Hero />
-        </div>
-      </div>      
-      <div className={`bg-primary ${styles.paddingX} ${styles.flexStart}`}>
-        <div className={`${styles.boxWidth}`}>
-          <Stats />
-          <Features />
-        </div>
-      </div>
-      <Footer />
-    </div>
+    </AuthProvider>
   )
 }
 
