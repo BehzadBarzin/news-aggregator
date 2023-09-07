@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class SourceCategorySeeder extends Seeder
 {
+    /**
+     * An associative array that maps the local categories to a list of categories that exist on each source
+     * 'source' => [
+     *      'local category' => ['source category 1', 'source category 2']
+     * ]
+     */
     private $sourceCategories = [
         'The Guardian' => [
             'Business' => [ 'business', 'better-business', 'small-business-network', 'money'],

@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 class CategorySeeder extends Seeder
 {
 
+    /**
+     * List of categories that the local database represents
+     */
     private $categories = [
         'Business',
         'Science',

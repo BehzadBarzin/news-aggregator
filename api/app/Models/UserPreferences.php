@@ -13,8 +13,16 @@ class UserPreferences extends Model
         'user_id', 'authors', 'sources', 'categories', 'keywords'
     ];
 
+    // -----------------------------------------------------------------------------------------------------------
+    // Relations
+    // -----------------------------------------------------------------------------------------------------------
+
+    // One-to-One: each UserPreferences has one User
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(
+            User::class,
+            'user_id' // Foreign key on this 'user_preferences' table that references the User
+        );
     }
 }

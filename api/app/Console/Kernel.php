@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // Schedule jobs using cron-jobs, hourly, to aggregate all the new data from all sources
         $schedule->job(new AggregateNewsAPI)->hourly();
         $schedule->job(new AggregateGuardian)->hourly();
         $schedule->job(new AggregateNYTimes)->hourly();

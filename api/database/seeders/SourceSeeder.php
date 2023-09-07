@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 class SourceSeeder extends Seeder
 {
 
+    /**
+     * List of sources to gather data from
+     */
     private $sources = [
         'The Guardian',
         'New York Times',

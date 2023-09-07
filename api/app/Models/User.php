@@ -43,10 +43,19 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    // When returning a User, populate these relations (get their records and place them in the user object)
     protected $with = ['preferences'];
 
+    // -----------------------------------------------------------------------------------------------------------
+    // Relations
+    // -----------------------------------------------------------------------------------------------------------
+
+    // One-to-One: each User has one UserPreferences
     public function preferences()
     {
-        return $this->hasOne(UserPreferences::class, 'user_id');
+        return $this->hasOne(
+            UserPreferences::class,
+            'user_id' // Foreign key on the 'user_preferences' table that references this User
+        );
     }
 }
