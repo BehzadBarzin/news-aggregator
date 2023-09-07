@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home'
-import { AuthProvider, RequireAuth } from 'react-auth-kit';
+import { AuthProvider } from 'react-auth-kit';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
 import Feed from './pages/Feed';
