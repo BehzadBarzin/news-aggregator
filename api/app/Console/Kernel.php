@@ -16,9 +16,22 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // Schedule jobs using cron-jobs, hourly, to aggregate all the new data from all sources
-        $schedule->job(new AggregateNewsAPI)->everyFiveMinutes();
-        $schedule->job(new AggregateGuardian)->everyFiveMinutes();
-        $schedule->job(new AggregateNYTimes)->everyFiveMinutes();
+        // $schedule->job(new AggregateNewsAPI)->everyTwoMinutes();
+        // $schedule->job(new AggregateGuardian)->everyTwoMinutes();
+        // $schedule->job(new AggregateNYTimes)->everyTwoMinutes();
+
+        // Todo: The above code is commented because the default queue connection = database doesn't work and jobs don't get posted to db
+        // Todo: for the same reason, when running 'php artisan queue:work' we need to specify the queue connection → 'php artisan queue:work database'
+        $schedule->call(function () {
+            AggregateNewsAPI::dispatch()->onConnection('database'); // Manually setting queue connection
+        })->everyTwoMinutes();
+        $schedule->call(function () {
+            AggregateGuardian::dispatch()->onConnection('database'); // Manually setting queue connection
+        })->everyTwoMinutes();
+        $schedule->call(function () {
+            AggregateNYTimes::dispatch()->onConnection('database'); // Manually setting queue connection
+        })->everyTwoMinutes();
+
     }
 
     /**

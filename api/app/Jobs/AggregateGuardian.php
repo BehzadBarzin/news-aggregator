@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Aggregators\GuardianAggregator;
 
-class AggregateGuardian implements ShouldQueue, ShouldBeUnique
+class AggregateGuardian implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
