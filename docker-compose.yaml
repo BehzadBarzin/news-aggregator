@@ -23,7 +23,12 @@ services:
       - backend
     networks:
       - app
-    command: ["bash", "-c", "php artisan queue:work --tries=3"]
+    command: ["supervisord", "-c", "/etc/supervisord.conf"]
+    # The below environment variables are used in the supervisord.conf file to run the queue worker through supervisor
+    environment:
+      - APP_ROOT= /app/api
+      - QUEUE_DRIVER= database
+      # - NUM_PROCS=${NUM_PROCS}
 
   scheduler:
     build: 

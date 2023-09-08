@@ -4,6 +4,7 @@
 - Run the scheduler to create new aggregation jobs every hour: ```php artisan schedule:work```
   - This solution is just for testing, the correct procedure is to create a cron job on the OS: [Documentation](https://laravel.com/docs/10.x/scheduling#running-the-scheduler)
 - Run the queue worker to execute the jobs from the database: ```php artisan queue:work```
+  - To run the queue worker in a docker container and ensuring that it stays open we use ```supervisor```: [Documentation](https://laravel.com/docs/10.x/queues#supervisor-configuration)
 
 ## General Procedure
 - Scheduler (```./app/Console/Kernel.php```) runs hourly and creates new jobs to gather data from the news sources
