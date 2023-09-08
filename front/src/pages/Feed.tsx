@@ -266,6 +266,12 @@ function Feed() {
         // If not logged in, skip
         if (!isAuthenticated()) return;
 
+        // On the first render all properties on the filters state is being set to empty
+        // This triggers this useEffect which syncs the empty arrays with the api
+        /* TODO: Wrong Solution: for now we just don't sync empty filters (when all are empty) with api
+         Problem: When the user wants to clear all his filters, we won't sync*/
+        if (!filters.authors && !filters.categories && !filters.sources && !filters.keywords) return;
+
         const sendPrefs = async () => {
             const res = await axios.post(`${API_URL}/preferences`, {
                 authors: filters.authors,
